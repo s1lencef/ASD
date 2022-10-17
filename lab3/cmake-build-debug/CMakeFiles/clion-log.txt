@@ -1,0 +1,6 @@
+C:\Users\Пользователь\AppData\Local\JetBrains\CLion2022.1\cygwin_cmake\bin\cmake.exe -DCMAKE_BUILD_TYPE=Debug "-DCMAKE_MAKE_PROGRAM=/cygdrive/e/CLion 2022.1/bin/ninja/cygwin/ninja.exe" -G Ninja -S /cygdrive/e/LETI/2_kurs/A_DS/lab3 -B /cygdrive/e/LETI/2_kurs/A_DS/lab3/cmake-build-debug
+CMake Error at CMakeLists.txt:1 (cmake_minimum_required):
+  CMake 3.23 or higher is required.  You are running version 3.22.3
+
+
+-- Configuring incomplete, errors occurred!
