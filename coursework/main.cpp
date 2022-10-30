@@ -50,6 +50,9 @@ class Auto{
         bool is_free(){
             return this->free;
         }
+        ~Auto(){
+            cout<<"Deleted\n";
+        }
 
 };
 
@@ -62,23 +65,27 @@ class Auto{
 //    cout<<"Введите номер автомобиля: ";
 //}
 //реформирать эту функцию так, чтобы ключи менялись для новой длиныы массива
-int resize_arr(Auto* cars, int size)//изменение размера массива
+int resize_arr(Auto* cars, int size)
 {
-    Auto* resize_readers = new Auto[size*2];
+    Auto* new_cars = new Auto[size*2];
     for(int i = 0; i < size; i++)
     {
-        //resize_readers[i] = readers[i];
+        if(!cars[i].is_free()){
+            cars[i].set_key(size*2);
+            new_cars[cars[i].get_key()] = cars[i];
+        }
+
     }
-    size++;
-    //readers = resize_readers;
-    delete[] resize_readers;
+    size*=2;
+    cars = new_cars;
+    delete[] new_cars;
     return size;
 }
-void setup(Auto *cars, int size){
+void setup(Auto *cars, int &size){
     string name,brand,plate;
     Auto obj;
     int i = 0,key;
-    for(int i = 0; i<size;i++){
+    for(int i = 0; i<size/2;i++){
         i = 0;
         cout<<"Введите номер автомобиля: ";
         cin>>plate;
@@ -101,7 +108,7 @@ void setup(Auto *cars, int size){
             else{
                 i++;
                 if(key+i>=size){
-
+                    size = resize_arr(cars,size);
                 }
             }
         }
@@ -119,9 +126,13 @@ void print(Auto cars[], int size){
 //М416ЕВ178
 int main(){
     setlocale(LC_ALL,"Russia");
-    int arr_size = 3;
+    int arr_size;
     Auto obj;
-    Auto *cars = new Auto[arr_size];
+    Auto *cars;
+    cout<<"Введите количество автомобилей: ";
+    cin>>arr_size;
+    arr_size*=2;
+    cars = new Auto[arr_size];
     setup(cars, arr_size);
     print(cars,arr_size);
 
