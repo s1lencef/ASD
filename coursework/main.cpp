@@ -18,7 +18,7 @@ class Auto{
             this->plate = "";
             this->owner_name = "";
             this->brand = "";
-            key = 0;
+            this->key = 0;
         }
         void set(string pl, string name, string br){
             this->plate = pl;
@@ -38,8 +38,14 @@ class Auto{
             }
             this->key = atoi(numbers)%M;
         }
+        void set_free(){
+            this->free = true;
+        }
         int get_key() const{
             return this->key;
+        }
+        string get_plate()const{
+            return this->plate;
         }
         void output(){
             cout<< "Автомобиль: "<<this->brand<<
@@ -50,9 +56,9 @@ class Auto{
         bool is_free(){
             return this->free;
         }
-        ~Auto(){
-            cout<<"Deleted\n";
-        }
+//        ~Auto(){
+//            cout<<"Deleted\n";
+//        }
 
 };
 
@@ -64,28 +70,33 @@ class Auto{
 //    bool flag;
 //    cout<<"Введите номер автомобиля: ";
 //}
+
+
 //реформирать эту функцию так, чтобы ключи менялись для новой длиныы массива
-int resize_arr(Auto* cars, int size)
-{
+Auto*  resize_arr(Auto* cars, int &size)
+{   cout<<"\nresize\n";
     Auto* new_cars = new Auto[size*2];
+
     for(int i = 0; i < size; i++)
     {
         if(!cars[i].is_free()){
+            cout<<i<<endl;
             cars[i].set_key(size*2);
+            cout<<cars[i].get_key()<<endl;
             new_cars[cars[i].get_key()] = cars[i];
         }
-
     }
-    size*=2;
-    cars = new_cars;
-    delete[] new_cars;
-    return size;
+    size *=2;
+    cout<<"\n"<<size<<endl;
+    delete[] cars;
+    return new_cars;
 }
-void setup(Auto *cars, int &size){
+Auto*  setup(Auto *cars, int &size){
     string name,brand,plate;
     Auto obj;
-    int i = 0,key;
-    for(int i = 0; i<size/2;i++){
+    int i,key;
+    const int count = size;
+    for(int j = 0; j<count/2;j++){
         i = 0;
         cout<<"Введите номер автомобиля: ";
         cin>>plate;
@@ -96,34 +107,38 @@ void setup(Auto *cars, int &size){
         cout<<"Введите марку автомобиля: ";
         cin>>brand;
         obj.set(plate,name,brand);
-        obj.set_key(size);
-        cout<<obj.get_key()<<endl;
         while(true){
+            obj.set_key(size);
             key = obj.get_key();
-            if(cars[key + i].is_free()){
-                cars[key + i] = obj;
-                cout<<cars[key+ i].is_free()<<endl;
+            cout<<"\n"<<key+i<<"   "<<obj.get_plate()<<"   "<<cars[key+i].is_free()<<endl;
+            if(cars[key+i].is_free()){
+                cars[key+i] = obj;
                 break;
             }
             else{
                 i++;
                 if(key+i>=size){
-                    size = resize_arr(cars,size);
+                    i=0;
+                    cars = resize_arr(cars,size);
+                    cout<<"\n"<<size<<endl;
                 }
             }
         }
-
     }
+    return cars;
 }
 void print(Auto cars[], int size){
     cout<<"Данные обо всех автомобилях\n"<<endl;
     for(int i =0;i<size;i++){
-        cars[i].output();
+        if(!cars[i].is_free()){
+            cars[i].output();
+        }
+
     }
 }
 
 
-//М416ЕВ178
+//М416ЕВ098
 int main(){
     setlocale(LC_ALL,"Russia");
     int arr_size;
@@ -133,7 +148,7 @@ int main(){
     cin>>arr_size;
     arr_size*=2;
     cars = new Auto[arr_size];
-    setup(cars, arr_size);
+    cars = setup(cars, arr_size);
     print(cars,arr_size);
 
     return 0;
