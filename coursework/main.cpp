@@ -38,7 +38,11 @@ class Auto{
             }
             this->key = atoi(numbers)%M;
         }
-        void set_free(){
+        void set_null(){
+            this->plate = "";
+            this->owner_name = "";
+            this->brand = "";
+            this->key = 0;
             this->free = true;
         }
         int get_key() const{
@@ -62,16 +66,71 @@ class Auto{
 
 };
 
-//string isPlate(){
-//    setlocale(LC_ALL,"Russia");
-//    string value;
-//    char correct_letters[12] = "АВЕКМНОРСТУХ";
-//    string correct_numbers = "0123456789";
-//    bool flag;
-//    cout<<"Введите номер автомобиля: ";
-//}
+bool check_plate(string &value){
+    string correct_letters = "АВЕКМНОРСТУХ";
+    string correct_numbers = "0123456789";
+    int count = 0;
+    if(value.size() != 12){
+        return false;
+    }
+    for (int i = 0; i<9;i++){
+        cout<<"int:"<<(int)value[i]<<endl;
+        if(i==0 || i == 4 || i == 5){
 
+            for( auto c: correct_letters){
+                if(c == value[i]){
+                    count ++;
 
+                }
+            }
+        }
+        else{
+
+            for( auto c: correct_numbers){
+                if(c == value[i]){
+                    count ++;
+
+                }
+            }
+        }
+        cout<<count<<endl;
+    }
+    if (count == 9){
+        return true;
+    }
+    return false;
+}
+string isPlate(){
+    setlocale(LC_ALL,"Russia");
+    string value;
+
+    while(true){
+        cin>>value;
+        if(check_plate(value)){
+            return value;
+        }
+        else{
+            cout<<"Введенный номер не соответствует стандарту ANNNAANNN Повторите попытку: ";
+            cin.clear();
+            cin.ignore(32767, '\n');
+        }
+    }
+}
+
+int isNumber(){
+    int n;
+    while (true){
+        cin>>n;
+        if(cin.fail()){
+            cout<<"Введено неверное значение, повторите попытку: ";
+            cin.clear();
+            cin.ignore(32767, '\n');
+        }
+        else{
+            return n;
+        }
+    }
+}
 //реформирать эту функцию так, чтобы ключи менялись для новой длиныы массива
 Auto*  resize_arr(Auto* cars, int &size)
 {   cout<<"\nresize\n";
@@ -91,39 +150,43 @@ Auto*  resize_arr(Auto* cars, int &size)
     delete[] cars;
     return new_cars;
 }
-Auto*  setup(Auto *cars, int &size){
+Auto* add_car(Auto *cars, int &size){
     string name,brand,plate;
     Auto obj;
-    int i,key;
-    const int count = size;
-    for(int j = 0; j<count/2;j++){
-        i = 0;
-        cout<<"Введите номер автомобиля: ";
-        cin>>plate;
-        cin.clear();
-        cin.ignore(32767, '\n');
-        cout<<"Введите ФИО владельца: ";
-        getline(cin, name);
-        cout<<"Введите марку автомобиля: ";
-        cin>>brand;
-        obj.set(plate,name,brand);
-        while(true){
-            obj.set_key(size);
-            key = obj.get_key();
-            cout<<"\n"<<key+i<<"   "<<obj.get_plate()<<"   "<<cars[key+i].is_free()<<endl;
-            if(cars[key+i].is_free()){
-                cars[key+i] = obj;
-                break;
-            }
-            else{
-                i++;
-                if(key+i>=size){
-                    i=0;
-                    cars = resize_arr(cars,size);
-                    cout<<"\n"<<size<<endl;
-                }
+    int i = 0,key;
+    cout<<"Введите номер автомобиля: ";
+    cin>>plate;
+    cin.clear();
+    cin.ignore(32767, '\n');
+    cout<<"Введите ФИО владельца: ";
+    getline(cin, name);
+    cout<<"Введите марку автомобиля: ";
+    cin>>brand;
+    obj.set(plate,name,brand);
+    while(true){
+        obj.set_key(size);
+        key = obj.get_key();
+        cout<<"\n"<<key+i<<"   "<<obj.get_plate()<<"   "<<cars[key+i].is_free()<<endl;
+        if(cars[key+i].is_free()){
+            cars[key+i] = obj;
+            break;
+        }
+        else{
+            i++;
+            if(key+i>=size){
+                i=0;
+                cars = resize_arr(cars,size);
+                cout<<"\n"<<size<<endl;
             }
         }
+    }
+    return cars;
+}
+Auto* setup(Auto *cars, int &size){
+
+    const int count = size;
+    for(int j = 0; j<count/2;j++){
+        cars = add_car(cars, size);
     }
     return cars;
 }
@@ -137,18 +200,72 @@ void print(Auto cars[], int size){
     }
 }
 
+int plate_search(string num, Auto * cars, int size){
+    Auto obj;
+    int key, i = 0;
+    obj.set(num, "", "");
+    obj.set_key(size);
+    key = obj.get_key();
+    while (true){
+        if(cars[key + i].get_key()== key){
+            if(cars[key + i].get_plate() == num  ){
+                cout<<"Автомобиль с указанным номером найден!\n\nИнформация об автомобиле:\n";
+                cars[key + i].output();
+                return  key+i;
+            }
+            else{
+                i++;
+            }
+        }
+        else{
+            cout<<"Автомобиль отсутствует в базе!"<<endl;
+            return -1;
+        }
+    }
+}
+
+Auto* remove_last(Auto * cars, int size){
+    int last_key;
+    for (int i = 0; i<size; i++){
+        if( !cars[i].is_free()){
+            last_key = i;
+        }
+    }
+    cars[last_key].set_null();
+    cout<<"Запись о последнем автомобиле в базе удалена!"<<endl;
+    return cars;
+}
+Auto* remove_first(Auto * cars, int size){
+    for (int i = 0; i<size; i++){
+        if( !cars[i].is_free()){
+            cars[i].set_null();
+            break;
+        }
+    }
+    cout<<"Запись о последнем автомобиле в базе удалена!"<<endl;
+    return cars;
+}
+
+Auto *remove_by_plate(Auto * cars, int size, string dplate){
+    int key = plate_search(dplate,cars,size);
+
+
+}
 
 //М416ЕВ098
 int main(){
     setlocale(LC_ALL,"Russia");
-    int arr_size;
+    int arr_size, k = 0;
+    string plate;
     Auto obj;
     Auto *cars;
     cout<<"Введите количество автомобилей: ";
-    cin>>arr_size;
+    arr_size = isNumber();
     arr_size*=2;
     cars = new Auto[arr_size];
     cars = setup(cars, arr_size);
+    print(cars,arr_size);
+    cars = remove_last(cars, arr_size);
     print(cars,arr_size);
 
     return 0;
