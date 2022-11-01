@@ -248,7 +248,24 @@ Auto* remove_first(Auto * cars, int size){
 
 Auto *remove_by_plate(Auto * cars, int size, string dplate){
     int key = plate_search(dplate,cars,size);
+    int choise;
+    if(key == -1){
+        cout<<"Невозможно удалить данные об автомобиле, так как его нет в базе";
+    }
+    else{
+        cout<<"Вы точно хотите удалить этот автомобиль из базы? (1-да/0-нет)"<<endl;
+        choise = isNumber();
+        if(choise == 1){
+            cout<<"\nДанные об автомобиле "<< cars[key].get_plate()<<" удалены!"<<endl;
+            cars[key].set_null();
+        }
+        else{
+            cout<<"Удаление отменено."<<endl;
+        }
 
+
+    }
+    return cars;
 
 }
 
@@ -265,7 +282,9 @@ int main(){
     cars = new Auto[arr_size];
     cars = setup(cars, arr_size);
     print(cars,arr_size);
-    cars = remove_last(cars, arr_size);
+    cout<<"Введите номер автомобиля, который хотите удалить: ";
+    cin>>plate;
+    cars  = remove_by_plate(cars, arr_size,plate);
     print(cars,arr_size);
 
     return 0;
