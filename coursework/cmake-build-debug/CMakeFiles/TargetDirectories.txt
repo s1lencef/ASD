@@ -1,3 +1,3 @@
-/cygdrive/e/LETI/2_kurs/A_DS/coursework/cmake-build-debug/CMakeFiles/coursework.dir
-/cygdrive/e/LETI/2_kurs/A_DS/coursework/cmake-build-debug/CMakeFiles/edit_cache.dir
-/cygdrive/e/LETI/2_kurs/A_DS/coursework/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/cygdrive/c/Users/fedvo/CLionProjects/coursework/cmake-build-debug/CMakeFiles/coursework.dir
+/cygdrive/c/Users/fedvo/CLionProjects/coursework/cmake-build-debug/CMakeFiles/edit_cache.dir
+/cygdrive/c/Users/fedvo/CLionProjects/coursework/cmake-build-debug/CMakeFiles/rebuild_cache.dir

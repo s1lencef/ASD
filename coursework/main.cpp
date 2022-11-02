@@ -60,9 +60,8 @@ class Auto{
         bool is_free(){
             return this->free;
         }
-//        ~Auto(){
-//            cout<<"Deleted\n";
-//        }
+        ~Auto(){
+        }
 
 };
 
@@ -150,6 +149,7 @@ Auto*  resize_arr(Auto* cars, int &size)
     delete[] cars;
     return new_cars;
 }
+
 Auto* add_car(Auto *cars, int &size){
     string name,brand,plate;
     Auto obj;
@@ -160,8 +160,10 @@ Auto* add_car(Auto *cars, int &size){
     cin.ignore(32767, '\n');
     cout<<"Введите ФИО владельца: ";
     getline(cin, name);
+
     cout<<"Введите марку автомобиля: ";
-    cin>>brand;
+    getline(cin, brand);
+
     obj.set(plate,name,brand);
     while(true){
         obj.set_key(size);
@@ -269,6 +271,11 @@ Auto *remove_by_plate(Auto * cars, int size, string dplate){
 
 }
 
+Auto * clear (Auto *cars){
+    delete[] cars;
+    delete cars;
+    return cars;
+}
 //М416ЕВ098
 int main(){
     setlocale(LC_ALL,"Russia");
@@ -282,9 +289,7 @@ int main(){
     cars = new Auto[arr_size];
     cars = setup(cars, arr_size);
     print(cars,arr_size);
-    cout<<"Введите номер автомобиля, который хотите удалить: ";
-    cin>>plate;
-    cars  = remove_by_plate(cars, arr_size,plate);
+    cars = clear (cars);
     print(cars,arr_size);
 
     return 0;
